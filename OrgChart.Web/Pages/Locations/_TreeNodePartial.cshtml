@@ -1,0 +1,53 @@
+﻿@model Pages.Locations.LocationViewModel
+
+@{
+    string[] units = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" };
+    int l_level = 1;
+    int max_level = l_level;
+
+    double p = 0;
+
+    if (Model.Children != null && Model.Children.Any())
+    {
+        int total = Model.Children.Count;
+        int pos_filled = Model.Children.Count(x => x.User != null);
+
+        p = Math.Round((double)pos_filled / (double)total * 100, 0);
+    }
+    string health_color = p < 25 ? "text-danger" : p < 50 ? "text-warning" : p < 75 ? "text-primary" : "text-success";
+    string team_health = Model.Children == null ? string.Empty : Model.Children.Any() ? $"Team Health {p}%" : string.Empty;
+
+    string employee_name = Model.User == null ? string.Empty : $"{Model.User.FirstName} {Model.User.LastName}";
+
+}
+<div id="collapse-@Model.LocationId" class="collapse show @units[Model.Level] collapse-@Model.ParentLocationId">
+    <div class="d-flex div-hover">
+        @if (Model.Children!.Any()) {
+            <button class="btn btn-primary btn-sm btn-collapse-location" data-bs-toggle="collapse" data-bs-target=".collapse-@Model.LocationId" tabindex="-1">
+                +
+            </button>
+        }
+        <input id="input-location-@Model.LocationId" class="form-control form-control-sm input-location-name" data-location-id="@Model.LocationId" type="text" value="@Model.LocationName" />
+        <input id="input-employee-@Model.LocationId" class="form-control form-control-sm input-employee-name" data-location-id="@Model.LocationId" type="text" value="@employee_name" tabindex="-1" />
+        <div class="div-hover-buttons">
+            <button class="btn btn-sm btn-success btn-add-location" data-location-id="@Model.LocationId" data-parent-location-id="@Model.ParentLocationId" data-level="@Model.Level" tabindex="-1">ADD</button>
+            @if (!Model.Children!.Any())
+            {
+                <button class="btn btn-sm btn-danger btn-remove-location" data-location-id="@Model.LocationId" tabindex="-1">REMOVE</button>
+            }
+            <button type="button" class="btn btn-outline-secondary btn-top-matches" data-bs-toggle="modal" data-location-id="@Model.LocationId" data-bs-target="#modal-ranked-user-list" tabindex="-1">Matched Employees</button>
+        </div>   
+        @if (!string.IsNullOrEmpty(team_health))
+        {
+            <div class="ms-auto fw-bold @health_color">@team_health</div>
+        }
+    </div>
+    @if (Model.Children!.Any())
+    {
+        foreach (var child in Model.Children!)
+        {
+            @await Html.PartialAsync("~/Pages/Locations/_TreeNodePartial.cshtml", child)
+            ;
+        }
+    }
+</div>

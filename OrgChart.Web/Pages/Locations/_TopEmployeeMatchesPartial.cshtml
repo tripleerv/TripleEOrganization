@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Pages.Locations.TopEmployeeMatchViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            @{
+                if (Model == null || Model.Users == null)
+                {
+                    <h4 class="text-danger">No Employees Matches</h4>
+                }
+                else if (!Model.LocationCompanyRoles.Any())
+                {
+                    <h4 class="text-dark">This Location Has No Required Company Roles</h4>
+
+                    <h6 class="text-danger">No Company Roles to Match Employees With</h6>
+                }
+                else if (!Model.Users.Any())
+                {
+                    <h4 class="text-primary">@Model.str_LocationCompanyRoles</h4>
+
+                    <h6 class="text-danger">No Employees Matches</h6>
+                }
+                else
+                {
+                    <h4 class="text-primary mb-3 pb-3 border-bottom">@Model.str_LocationCompanyRoles</h4>
+                    <table id="table-top-matches" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">EmployeeId</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Matched Roles</th>
+                                <th scope="col">Missing Roles <span class="ml-auto float-end">(@Model.Users.Count)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var emp in Model.Users)
+                            {
+                                <tr>
+                                    <th scope="row">@emp.EmployeeId</th>
+                                    <td class="text-nowrap">@emp.FullName</td>
+                                    <td>@emp.MatchedPercentage.ToString("0")%</td>
+                                    <td class="text-danger missing-company-role">
+                                        @foreach (var role in emp.MissingCompanyRoles)
+                                        {
+                                            <span class="missing-company-role">@role, </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        </div>
+    </div>
+</div>

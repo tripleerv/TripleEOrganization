@@ -1,0 +1,52 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Org Chart";
+}
+
+<link rel="stylesheet" href="~/css/org_chart.css?v=1" />
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
+<script type="text/javascript" src="~/js/org_chart.js?v=3" defer></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="div-employee-search" class="d-none d-sm-block col-sm-3">
+            <form>
+                <div class="form-group">
+                    <input id="input-search-employee" type="text" class="form-control" placeholder="Search employee name">
+                    <div class="card mt-1" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img id="img-employee" src="/images/defaultProfilePicture.png" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 id="span-employee-name" class="card-title">Employee</h5>
+                                    <p id="span-employee-details-1" class="card-text hide"></p>
+                                    <p id="span-employee-details-2" class="card-text hide"></p>
+                                    <p id="span-employee-details-3" class="card-text hide"></p>
+                                    <p id="span-employee-details-4" class="card-text hide"></p>
+                                    <p id="span-employee-details-5" class="card-text hide"></p>
+                                    <p id="span-employee-details-6" class="card-text hide"></p>
+                                    <p id="span-employee-details-7" class="card-text hide"></p>
+                                    <p id="span-employee-details-8" class="card-text hide"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <a class="btn btn-link btn-temp" data-scale="1">Set Scale 1</a>
+            <a class="btn btn-link btn-temp" data-scale="2">Set Scale .8</a>
+            <a class="btn btn-link btn-temp" data-scale="3">Set Scale .6</a>
+            <a class="btn btn-link btn-temp" data-scale="4">Set Scale .4</a>
+            <a class="btn btn-link btn-temp" data-scale="5">Set Scale .2</a>
+        </div>
+        <div id="div-chart-wrapper" class="col-12 col-sm-9">
+            <div id="div-chart" class="">
+
+            </div>
+        </div>
+    </div>
+</div>

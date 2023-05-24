@@ -1,0 +1,55 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@model OrgChart.Web.Pages.Locations.IndexModel
+@{
+    ViewData["Title"] = "Locations";
+    int llevel = 1;
+    int max_level = llevel;
+}
+
+<link rel="stylesheet" href="~/css/locations.css?v=1"  asp-append-version="true" />
+<script type="text/javascript" src="~/js/locations/index.js?v=1" defer></script>
+
+<ul id="ul-employees" class="dropdown-menu">
+    <li class="li-employees border-top"><div class="dropdown-item text-muted">0 results</div></li>
+</ul>
+
+<form method="post" asp-page-handler="ExportLocations">
+    <button id="btn-export-locations" type="submit" class="btn btn-primary">Export Locations</button>
+</form>
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-12">
+            @foreach (var node in Model.ParentLocation.Locations)
+            {
+                @await Html.PartialAsync("~/Pages/Locations/_TreeNodePartial.cshtml", node)
+                ;
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal User Report -->
+<div id="modal-ranked-user-list" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-ranked-user-list-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <form method="post" asp-page-handler="ExportTopMatches">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-ranked-user-list-label">Top Employee Matches</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modal-ranked-user-list-body" class="modal-body">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Export</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <input id="input-export-location-id" type="hidden" asp-for="LocationId" />
+        </form>
+    </div>
+</div>

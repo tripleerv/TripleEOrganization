@@ -1,0 +1,4 @@
+﻿scaffold-dbcontext 'Server=sqlsrv;Database="HR";TrustServerCertificate=True; Integrated Security=true;' Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -ContextDir Context -Context HRContext -DataAnnotations -Project OrgChart.Database -Tables "dbo.Employee", "dbo.Hierarchy", "dbo.Department", "dbo.Job", "dbo.OrgDepartment" -force
+
+
+scaffold-dbcontext 'Server=sql-02;Database="BistrainerDataWarehouse";TrustServerCertificate=True; Integrated Security=true;' Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -ContextDir Context -Context BistrainerContext -DataAnnotations -Project OrgChart.Database -Tables "dbo.User", "dbo.NEW_Location" -force

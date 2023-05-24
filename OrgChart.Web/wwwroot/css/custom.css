@@ -1,0 +1,307 @@
+﻿header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
+.nav-item {
+    border: none;
+}
+
+    .nav-item:hover {
+        background-color: transparent;
+        font-weight: 600;
+    }
+.header-spacer {
+    height: 3.55rem;
+    z-index: -1;
+}
+/*.main-header {
+    height: 2rem;
+    z-index: 3;
+    padding: .25rem 0rem 0rem 0rem;
+    background-color: white;
+}
+.main-spacer {
+    height: 2.5rem;
+    z-index: -1;
+    background-color: white;
+}*/
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1340px;
+    }
+}
+
+#form-main {
+    position: relative;
+}
+ul.top {
+    padding-left: 3.5rem;
+}
+#hr-icon {
+    /*color: #34D399;*/
+    color: #009cde;
+}
+body {
+    background-color: #fafafa;
+}
+ul, li {
+    list-style-type: none;
+}
+ul {
+    padding-left: 1.25rem;
+}
+.edit-inputs {
+    display: none;
+}
+li {
+    display: flex;
+    border-bottom: 1px solid lightgrey;
+    justify-content: space-between;
+    cursor: default;
+    line-height: 1.5rem;
+}
+.list-details {
+    display: flex;
+    justify-content: space-between;
+    cursor: default;
+    line-height: 1.5rem;
+}
+.list-details, .edit-inputs {
+    width: 100%;
+}
+li:hover {
+    background-color: #f2f2f2;
+}
+    li.hover-effect {
+        background-color: #7cd8ff;
+        color: white;
+    }    
+ul.active {
+    border-bottom: 2px solid #28a745;
+}
+#row-message {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+ul.show {
+    display: block;
+}
+ul.hide {
+    display: none;
+}
+
+/****************************************************/
+/********************** BUTTONS *********************/
+/****************************************************/
+.btn-save-add, .btn-save-edit, .btn-cancel, .btn-paste {
+    padding: 0rem;
+    margin: 0rem;
+}
+.btn-add, .btn-remove, .btn-edit {
+    padding: 0rem .75rem 0rem 0rem;
+    margin: 0rem;
+}
+.btn-add {
+    padding: 0rem .75rem 0rem .25rem !important;
+}
+.btn-remove {
+    padding: 0rem .25rem 0rem 0rem !important;
+}
+
+.btn-paste {
+    color: #009cde;
+    font-size: .75rem;
+    visibility: hidden;
+    text-decoration: underline;
+    margin-right: 1.25rem !important;
+} 
+.btn-add:hover, .btn-remove:hover, .btn-edit:hover {
+
+}
+.btn-edit {
+    color: #009cde;
+}
+.btn-add {
+    color: #28a745;
+}
+.btn-save-add, .btn-save-edit {
+    font-weight: 600;
+    color: green;
+}
+.btn-remove {
+    color: red;
+}
+.btn-remove:disabled {
+    color: transparent;
+}
+.btn-save-add:hover {
+    font-weight: 700;
+    color: green;
+}
+.btn-save-edit:hover {
+    font-weight: 700;
+    color: green;
+}
+.btn-cancel {
+    color: #dc3545;
+}
+.btn-add:hover {
+
+}
+.btn-cancel:hover {
+    font-weight: 700;
+    color: #dc3545;
+}
+.btn-add:focus, .btn-cancel:focus, .btn-save-add:focus, .btn-save-edit:focus, 
+.btn-edit:focus, .btn-remove:focus, .btn-paste:focus, .btn-move-up:focus, 
+.btn-move-down:focus, .btn-collapse-level:focus  {
+    box-shadow: none;
+    outline: none;
+}
+.btn-collapse {
+    position: absolute;
+    left: 0rem;
+    cursor: default;
+}
+.btn-collapse-level {
+    font-weight: 900;
+}
+.btn-collapse.show:after {
+    content: '-';
+}
+
+.btn-collapse.hide:after {
+    content: '+';
+}
+
+.btn-expand-all, .btn-collapse-all {
+    border: none;
+    padding: 0rem .5rem;
+    height: min-content;
+    margin-top: auto;
+    margin-bottom: .5rem;
+}
+.btn-move-up, .btn-move-down, .btn-collapse-level {
+    margin: 0rem;
+    padding: 0rem .15rem 0rem .15rem;
+}
+.btn-move-up:hover, .btn-move-down:hover, .btn-collapse-level:hover {
+    color: #009cde;
+}
+.btn-move-up:disabled, .btn-move-down:disabled {
+    color: lightgray;
+}
+/****************************************************/
+/********************** LABELS **********************/
+/****************************************************/
+label {
+    padding: 0rem;
+    margin: 0rem;
+}
+.department-description {
+    font-weight: 700;
+}
+.personnel-description {
+    font-weight: 600;
+}
+.personnel-name {
+    margin-right: 4rem;
+}
+.hierarchy-head-description {
+    font-weight: 700;
+}
+.hierarchy-head-name {
+    margin-right: 4rem;
+}
+/****************************************************/
+/********************** TABLE ***********************/
+/****************************************************/
+
+#employee-table {
+    display: block;
+    overflow-y: scroll !important;
+    max-height: 500px !important;
+    height: 500px !important;
+    cursor: default;
+    border: none;
+    border-bottom: 1px solid lightgrey;
+}
+#employee-table tr td {
+    padding: 0rem 0rem !important;
+    width: 100%;
+}
+#employee-table th {
+    padding: 0rem 0rem .25rem 0rem !important;
+    position: absolute;
+    background-color: #fafafa;
+    width: 215px;
+    border: none;
+}
+#employee-table td.exists {
+    background-color: #7cd8ff;
+    color: white;
+}
+#employee-table td.exists:hover {
+    background-color: #55ccff;
+}
+
+#employee-table td:hover {
+    background-color: #f2f2f2;
+}
+#div-employees {
+/*    position: fixed;
+    right: 1rem;*/
+    position: fixed;
+    background-color: white;
+    border: 1px solid lightgrey;
+    padding: 1rem;
+}
+/****************************************************/
+/************* HOVER DIV BUTTONS ********************/
+/****************************************************/
+#div-buttons {
+    margin: .5rem .5rem;
+    padding: .5rem .5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+#div-inputs {
+    display: flex;
+}
+
+.button-list {
+    display: inline-flex;
+    visibility: hidden; 
+    z-index: 2;
+}
+.move-list {
+    position: absolute;
+    /*display: inline-flex;*/
+    /*visibility: visible;*/
+    display: none;
+    z-index: 3;
+    left: 1rem;
+    background-color: white;
+    /*margin-left: -3rem;*/
+}
+.employee-table-copy {
+    float: right;
+    font-size: .9rem;
+    visibility: hidden;
+    padding-right: .5rem;
+    background-color: transparent;
+}
+.employee-table-copy:hover {    
+    text-decoration: underline;
+    cursor: pointer;
+}
+.employee-table-copy.show {
+    visibility: visible !important;
+}
+td.copied {
+    background-color: #28a745;
+    color: white;
+}

@@ -1,0 +1,79 @@
+﻿
+
+#div-chart-wrapper {
+    padding-top: 1rem;
+    margin-left: auto;    
+    width: 75vw;
+    height: 85vh;
+}
+#div-chart {
+    overflow: auto;
+    width: 74vw;
+    height: 85vh;
+    cursor: grab;
+}
+
+#div-employee-search {
+    padding-top: 1rem;
+    position: fixed;
+    left: 0;
+    width: 25vw;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    height: 100vh;
+    background-color: #f2f2f2;
+}
+
+.img {
+    max-width: 3rem;
+    border: 1px solid #b5d9ea;
+}
+
+.department-name {
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: .75rem;
+    max-width: 6rem;
+    min-width: 6rem;
+    width: 6rem !important;
+    margin: auto;
+}
+
+.employee-name {
+    margin: auto;
+    line-height: .75rem;
+}
+
+.employee-position {
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: .75rem;
+    max-width: 6rem;
+    min-width: 6rem;
+    width: 6rem !important;
+    margin: auto;
+}
+
+/**************************************************/
+/**************** ORG CHART FUNCTIONS *************/
+/**************************************************/
+
+td:hover {
+    background-color: transparent !important;
+}
+
+.selected-employee {
+    box-shadow: 0 0 0 0.2rem rgba(72, 255, 97, 0.5);
+}
+
+.card-text {
+    font-size: .9rem;
+    font-weight: 500;
+    margin: 0rem;
+    white-space: nowrap;
+}
+
+.btn-temp {
+    display: block;
+    text-align: start;
+}

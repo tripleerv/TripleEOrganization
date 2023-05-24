@@ -1,0 +1,202 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "HR Hierarchy";
+    int level = 1;
+    int max_level = level;
+}
+<script type="text/javascript" src="~/js/hierarchy/index.js=1" defer></script>
+
+<input id="input-collapse-state" type="hidden" asp-for="t_CollapseState" />
+
+<div id="row-message-wrapper" class="row">
+    <div class="col-11">
+        <div id="row-message"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="main-header row mb-1 mt-1">
+        <div class="col-10">
+            <div class="w-100 border-bottom">
+                <button class="btn btn-sm btn-outline-dark btn-expand-all" type="button">+ Expand</button>
+                <button class="btn btn-sm btn-outline-dark btn-collapse-all" type="button">- Collapse</button>
+            </div>
+        </div>
+        <div class="col-2">
+            <form method="post" asp-page-handler="Export">
+               <button type="submit" class="btn btn-primary btn-sm">Export</button>
+            </form>
+        </div>
+    </div>
+    <div class="main-spacer"></div>
+    <div class="row">
+        <!--#region Main Form-->
+        <form id="form-main" class="col-12 col-lg-8" method="post">
+            @{
+                if (Model.Hierarchy != null)
+                {
+                    @foreach (var node in Model.Hierarchy)
+                    {
+                        int min = node.Children.Count == 0 ? 0 : node.Children.Min(x => x.Sequence);
+                        int max = node.Children.Count == 0 ? 0 : node.Children.Max(x => x.Sequence);
+
+                        var description_class = "";
+                        var parent_id = node.Parent == null ? 0 : node.Parent.Id;
+                        int _type = (int)node.Type;
+                        bool no_children = node.Children.Count == 0 ? true : false;
+                        string text_danger = node.Employee.Active ? "" : "text-danger";
+
+                        description_class = _type == 1 ? "personnel-description" : "department-description";
+
+                        <ul id="ul-@parent_id" class="show top level-@level">
+                            <li id="li-@node.Id" data-id="@node.Id">
+                                <!--#region List Details-->
+                                <div id="li-details-@node.Id" class="list-details">
+                                    <div>
+                                        @if (!no_children)
+                                        {
+                                            <span id="btn-collapse-@node.Id" class="btn-collapse show level-@level" data-id="@node.Id"></span>
+                                        }
+                                        <span id="description-@node.Id" class="@description_class" data-id="@node.Id">@node.Description</span>
+                                    </div>
+                                    <div>
+                                        <span id="name-@node.Id" class="personnel-name @text_danger">@node.Employee.FullName</span>
+                                        <button id="btn-paste-@node.Id" type="button" class="btn btn-sm btn-paste" value="@node.Id">Paste</button>
+                                        <div id="button-list-@node.Id" class="button-list">
+                                            <input id="checkbox-@node.Id" type="checkbox" class="form-check-input" data-id="@node.Id" data-parent-id="@parent_id" />
+                                            <button id="btn-add-@node.Id" type="button" class="btn btn-sm btn-add" value="@node.Id"><i class="fas fa-plus"></i></button>
+                                            <button id="btn-edit-@node.Id" type="button" class="btn btn-sm btn-edit" value="@node.Id" data-type="@_type" data-employee-id="@node.Employee.Id" data-description="@node.Description"><i class="fas fa-pen"></i></button>
+
+                                            @if (no_children)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-remove" value="@node.Id"><i class="fas fa-minus"></i></button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-sm btn-remove" disabled><i class="fas fa-minus"></i></button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--#endregion-->
+                                <div id="edit-inputs-@node.Id" class="edit-inputs"></div>
+                            </li>
+                            @{
+                                DisplayTree(node.Children, node.Id);
+                            }
+                        </ul>
+                    }
+                }
+            }
+        </form>
+        <!--#endregion-->
+        <!--#region Employee Table-->
+        <div class="col-4 d-none d-lg-block border-left show">
+            <div id="div-employees">
+                <table id="employee-table" class="table">
+                    <thead>
+                        <tr style="height: 35px">
+                            <th>
+                                <input id="input-employee-search" class="form-control form-control-sm" placeholder="Employee Search" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-employees">
+                        @foreach (var employee in Model.Employees)
+                        {
+                            <tr>
+                                @if (employee.HierarchyId != 0)
+                                {
+                                    <td id="td-@employee.Id" data-hierarchy-id="@employee.HierarchyId" data-employee-id="@employee.Id" class="exists">@employee.Number - @employee.FullName - @employee.Position</td>
+                                }
+                                else
+                                {
+                                    <td id="td-@employee.Id" data-hierarchy-id="0" data-employee-id="@employee.Id" class="">@employee.Number - @employee.FullName - @employee.Position <span id="copy-@employee.Id" data-employee-id="@employee.Id" class="employee-table-copy">Copy</span></td>
+                                }
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--#endregion-->
+    </div>
+</div>
+
+
+<!--#region Display Tree-->
+@{
+    void DisplayTree(List<Business.Models.HierarchyModel> children, int parent_id)
+    {
+        level++;
+        max_level = level > max_level ? level : max_level;
+
+        <ul id="ul-@parent_id" class="show level-@level" data-level="@level">
+            @foreach (var child in children)
+            {
+                int min = children.Count == 0 ? 0 : children.Min(x => x.Sequence);
+                int max = children.Count == 0 ? 0 : children.Max(x => x.Sequence);
+
+                var description_class = "";
+                int _type = (int)child.Type;
+                bool no_children = child.Children.Count == 0 ? true : false;
+                description_class = _type == 1 ? "personnel-description" : "department-description";
+                string can_move_up = "disabled";
+                string can_move_down = "disabled";
+                string text_danger = child.Employee.Active ? "" : "text-danger";
+
+                <li id="li-@child.Id" data-id="@child.Id" data-level="@level">
+                    <!--#region List Details-->
+                    <div id="li-details-@child.Id" class="list-details">
+                        <div>
+                            @if (!no_children)
+                            {
+                                <span id="btn-collapse-@child.Id" class="btn-collapse show level-@level" data-id="@child.Id"></span>
+                            }
+                            <div id="move-list-@child.Id" class="move-list">
+                                @{
+                                    can_move_up = child.Sequence == min ? "disabled" : "";
+                                    can_move_down = child.Sequence == max ? "disabled" : "";
+                                }
+                                <button id="btn-move-up-@child.Id" class="btn btn-sm btn-move-up" type="button" data-hierarchy-id="@child.Id" @can_move_up><i class="fas fa-angle-double-up"></i></button>
+                                <button id="btn-move-down-@child.Id" class="btn btn-sm btn-move-down" type="button" data-hierarchy-id="@child.Id" @can_move_down><i class="fas fa-angle-double-down"></i></button>
+                                <button id="btn-collapse-level-@level" class="btn btn-sm btn-collapse-level show" type="button" data-level="@level" title="Show Level"><i class="fas fa-expand"></i></button>
+                            </div>
+                            <span id="description-@child.Id" class="@description_class" data-id="@child.Id">@child.Description</span>
+                        </div>
+                        <div>
+                            <span id="name-@child.Id" class="personnel-name @text_danger">@child.Employee.FullName</span>
+                            <button id="btn-paste-@child.Id" type="button" class="btn btn-sm btn-paste" value="@child.Id">Paste</button>
+                            <div id="button-list-@child.Id" class="button-list">
+                                <input id="checkbox-@child.Id" type="checkbox" class="form-check-input" data-id="@child.Id" data-parent-id="@child.Parent.Id" />
+                                <button id="btn-add-@child.Id" type="button" class="btn btn-sm btn-add" value="@child.Id"><i class="fas fa-plus"></i></button>
+                                <button id="btn-edit-@child.Id" type="button" class="btn btn-sm btn-edit" value="@child.Id" data-type="@_type" data-employee-id="@child.Employee.Id" data-description="@child.Description"><i class="fas fa-pen"></i></button>
+
+                                @if (no_children)
+                                {
+                                    <button type="button" class="btn btn-sm btn-remove" value="@child.Id"><i class="fas fa-minus"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-sm btn-remove" disabled><i class="fas fa-minus"></i></button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion-->
+                    <div id="edit-inputs-@child.Id" class="edit-inputs"></div>
+                </li>
+                if (child.Children != null)
+                {
+                    DisplayTree(child.Children, child.Id);
+                    level--;
+                }
+            }
+        </ul>
+    }
+}
+
+
+<!--#endregion-->
