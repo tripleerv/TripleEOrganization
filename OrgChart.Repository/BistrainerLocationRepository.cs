@@ -14,6 +14,7 @@ namespace OrgChart.Repository
     public interface IBistrainerLocationRepository
     {
         public List<LocationRepositoryModel> Locations { get; }
+        public List<string> Departments { get; }
 
         LocationRepositoryModel Add(string name, int parent_id, string parent_name);
         LocationRepositoryModel Update(int id, string name, int parent_id, string parent_name);
@@ -58,6 +59,35 @@ namespace OrgChart.Repository
                 }
 
                 return (List<LocationRepositoryModel>)_memoryCache.Get("BistrainerLocations");
+            }
+        }
+
+        public List<string> Departments
+        {
+            get
+            {                
+                List<string> results = new List<string>();
+
+                foreach (var location in Locations)
+                {
+                    if (location.LocationName.Contains(":"))
+                    {
+                        var department = location.LocationName.Split(":")[0];
+
+                        if (!string.IsNullOrEmpty(department))
+                        {
+                            if (department.StartsWith("D"))
+                            {
+                                if (!results.Any(x => x.Equals(department)))
+                                {
+                                    results.Add(department);
+                                }
+                            }
+                        }
+                    }                    
+                }
+
+                return results;                
             }
         }
 

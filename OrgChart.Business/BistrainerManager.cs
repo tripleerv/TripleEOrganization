@@ -464,7 +464,7 @@ namespace OrgChart.Business
             if (!location.CompanyRoles.Any())
                 return new List<BistrainerRankedUserModel>();
 
-            List<int> ids = new List<int> { 7,46,162,165,174,207,227,315,382,449,459,508,532,629 };
+            List<int> ids = new List<int> { 7, 46, 162, 165, 174, 207, 227, 315, 382, 449, 459, 508, 532, 629 };
 
             var location_company_roles = location.CompanyRole;
 
@@ -494,7 +494,7 @@ namespace OrgChart.Business
 
         public List<string> Departments()
         {
-            throw new NotImplementedException();
+            return _bistrainerLocationRepository.Departments;
         }
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OrgChart.Business;
 using OrgChart.Business.Models;
-using OrgChart.Web.Pages.Bistrainer;
 
 namespace OrgChart.Web.Pages.Locations
 {
@@ -49,6 +48,8 @@ namespace OrgChart.Web.Pages.Locations
                 Locations = _bistrainerManager.LocationTree.Select(s => _mapper.Map<LocationViewModel>(s)).ToList(),
                 ParentLevel = 0
             };
+
+            var departemnts = _bistrainerManager.Departments();
 
             return Page();
         }
@@ -354,13 +355,25 @@ namespace OrgChart.Web.Pages.Locations
 
         public string MissingCompanyRolesToString
         {
-            get {
+            get
+            {
 
                 return string.Join(", ", MissingCompanyRoles);
-            
+
             }
         }
 
+    }
+
+    public class ResponseViewModel
+    {
+        public string Status { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public int LocationId { get; set; }
+        public string LocationName { get; set; } = string.Empty;
+        public int ParentLocationId { get; set; }
+        public string ParentLocationName { get; set; } = string.Empty;
+        public int Level { get; set; }
     }
 
     public class TopEmployeeMatchViewModel
@@ -370,10 +383,10 @@ namespace OrgChart.Web.Pages.Locations
         {
             get
             {
-                return string.Join(", ", LocationCompanyRoles);            
+                return string.Join(", ", LocationCompanyRoles);
             }
         }
         public List<UserViewModel> Users { get; set; } = new List<UserViewModel>();
     }
-        
+
 }
