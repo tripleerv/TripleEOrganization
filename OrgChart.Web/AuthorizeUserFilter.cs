@@ -11,6 +11,9 @@ namespace OrgChart.Web
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+
+            //context.Result = new RedirectToPageResult("/Index");
+            /*
             if (context.HttpContext.Request.Cookies["OrgChart_CookieAuth"] == null)
             {
                 string user_name = "";// context.HttpContext.User.Identity.Name;
@@ -82,9 +85,10 @@ namespace OrgChart.Web
 
                         //context.Result = new RedirectToPageResult("/Index");
                     }
-                }
+            */
                 
-            }
+                
+            
         }
     }
 }

@@ -24,7 +24,7 @@
     <div class="d-flex div-hover">
         @if (Model.Children!.Any()) {
             <button class="btn btn-primary btn-sm btn-collapse-location" data-bs-toggle="collapse" data-bs-target=".collapse-@Model.LocationId" tabindex="-1">
-                +
+                <span class="toggle-caret"></span>
             </button>
         }
         <input id="input-location-@Model.LocationId" class="form-control form-control-sm input-location-name" data-location-id="@Model.LocationId" type="text" value="@Model.LocationName" />

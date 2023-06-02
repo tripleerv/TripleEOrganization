@@ -49,7 +49,6 @@ namespace OrgChart.Web.Pages.Locations
                 ParentLevel = 0
             };
 
-            var departemnts = _bistrainerManager.Departments();
 
             return Page();
         }
