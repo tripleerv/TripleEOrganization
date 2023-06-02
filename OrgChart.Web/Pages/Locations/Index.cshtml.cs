@@ -49,8 +49,6 @@ namespace OrgChart.Web.Pages.Locations
                 ParentLevel = 0
             };
 
-            var departemnts = _bistrainerManager.Departments();
-
             return Page();
         }
 
@@ -326,6 +324,7 @@ namespace OrgChart.Web.Pages.Locations
         public int ParentLocationId { get; set; }
         public string ParentLocationName { get; set; } = null!;
         public int Level { get; set; }
+        public bool FirstLevelNode { get; set; }
         public UserViewModel User { get; set; } = null!;
         public decimal? TeamHealth { get; set; } = null!;
         public bool CollapseAll { get; set; }
@@ -357,9 +356,10 @@ namespace OrgChart.Web.Pages.Locations
         {
             get
             {
+                if (MissingCompanyRoles == null || !MissingCompanyRoles.Any())
+                    return string.Empty;
 
                 return string.Join(", ", MissingCompanyRoles);
-
             }
         }
 

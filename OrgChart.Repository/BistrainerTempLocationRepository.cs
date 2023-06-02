@@ -11,22 +11,23 @@ using System.Xml.Linq;
 
 namespace OrgChart.Repository
 {
-    public interface IBistrainerLocationRepository
+    public interface IBistrainerTempLocationRepository
     {
         public List<LocationRepositoryModel> Locations { get; }
         public List<string> Departments { get; }
 
+        LocationRepositoryModel Add(int id, string name, int parent_id, string parent_name);
         LocationRepositoryModel Add(string name, int parent_id, string parent_name);
         LocationRepositoryModel Update(int id, string name, int parent_id, string parent_name);
         LocationRepositoryModel UpdateEmployee(int locationId, string employeeId);
         LocationRepositoryModel UpdateCompanyRole(int locationId, string companyRoles);
         bool Remove(int id);
     }
-    public class BistrainerLocationRepository : IBistrainerLocationRepository
+    public class BistrainerTempLocationRepository : IBistrainerTempLocationRepository
     {
         private readonly IMemoryCache _memoryCache;
 
-        public BistrainerLocationRepository(IMemoryCache memoryCache)
+        public BistrainerTempLocationRepository(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
         }
@@ -41,12 +42,12 @@ namespace OrgChart.Repository
                 {
                     using (Database.Context.BistrainerContext dc = new Database.Context.BistrainerContext())
                     {
-                        results = dc.NewLocations.Select(s => new LocationRepositoryModel
+                        results = dc.NewTempLocations.Select(s => new LocationRepositoryModel
                         {
                             LocationId = s.Id,
                             LocationName = s.Name,
                             ParentLocationId = s.ParentId,
-                            ParentLocationName = s.ParentName,
+                            ParentLocationName = string.Empty,
                             EmployeeId = s.EmployeeId,
                             CompanyRole = s.CompanyRole
                         }).ToList();
@@ -95,11 +96,10 @@ namespace OrgChart.Repository
         {
             using (BistrainerContext dc = new BistrainerContext())
             {
-                var add = dc.NewLocations.Add(new Database.Models.NewLocation
+                var add = dc.NewTempLocations.Add(new Database.Models.NewTempLocation
                 {
                     Name = name,
                     ParentId = parent_id,
-                    ParentName = parent_name,
                     EmployeeId = string.Empty,
                     CompanyRole = string.Empty
                 });
@@ -116,7 +116,39 @@ namespace OrgChart.Repository
                     LocationId = add.Entity.Id,
                     LocationName = add.Entity.Name,
                     ParentLocationId = add.Entity.ParentId,
-                    ParentLocationName = add.Entity.ParentName,
+                    ParentLocationName = string.Empty,
+                    EmployeeId = add.Entity.EmployeeId,
+                    CompanyRole = add.Entity.CompanyRole
+                };
+            }
+        }
+
+        public LocationRepositoryModel Add(int id, string name, int parent_id, string parent_name)
+        {
+            using (BistrainerContext dc = new BistrainerContext())
+            {
+                var add = dc.NewTempLocations.Add(new Database.Models.NewTempLocation
+                {
+                    Id = id,
+                    Name = name,
+                    ParentId = parent_id,
+                    EmployeeId = string.Empty,
+                    CompanyRole = string.Empty
+                });
+                dc.SaveChanges();
+
+                if (add == null)
+                    return null!;
+
+                if (_memoryCache.TryGetValue("BistrainerLocations", out var temp))
+                    _memoryCache.Remove("BistrainerLocations");
+
+                return new LocationRepositoryModel
+                {
+                    LocationId = add.Entity.Id,
+                    LocationName = add.Entity.Name,
+                    ParentLocationId = add.Entity.ParentId,
+                    ParentLocationName = string.Empty,
                     EmployeeId = add.Entity.EmployeeId,
                     CompanyRole = add.Entity.CompanyRole
                 };
@@ -127,12 +159,12 @@ namespace OrgChart.Repository
         {
             using (BistrainerContext dc = new BistrainerContext())
             {
-                var dc_location = dc.NewLocations.Find(id);
+                var dc_location = dc.NewTempLocations.Find(id);
 
                 if (dc_location == null)
                     return false;
 
-                dc.NewLocations.Remove(dc_location);
+                dc.NewTempLocations.Remove(dc_location);
                 dc.SaveChanges();
 
                 if (_memoryCache.TryGetValue("BistrainerLocations", out var temp))
@@ -146,14 +178,13 @@ namespace OrgChart.Repository
         {
             using (BistrainerContext dc = new BistrainerContext())
             {
-                var dc_location = dc.NewLocations.Find(id);
+                var dc_location = dc.NewTempLocations.Find(id);
 
                 if (dc_location == null)
                     return null!;
 
                 dc_location.Name = name;
                 dc_location.ParentId = parent_id;
-                dc_location.ParentName = parent_name;
                 dc.SaveChanges();
 
                 if (_memoryCache.TryGetValue("BistrainerLocations", out var temp))
@@ -164,7 +195,7 @@ namespace OrgChart.Repository
                     LocationId = dc_location.Id,
                     LocationName = dc_location.Name,
                     ParentLocationId = dc_location.ParentId,
-                    ParentLocationName = dc_location.ParentName,
+                    ParentLocationName = string.Empty,
                     EmployeeId = dc_location.EmployeeId,
                     CompanyRole = dc_location.CompanyRole
                 };
@@ -175,7 +206,7 @@ namespace OrgChart.Repository
         {
             using (BistrainerContext dc = new BistrainerContext())
             {
-                var dc_location = dc.NewLocations.Find(locationId);
+                var dc_location = dc.NewTempLocations.Find(locationId);
 
                 if (dc_location == null)
                     return null!;
@@ -191,7 +222,7 @@ namespace OrgChart.Repository
                     LocationId = dc_location.Id,
                     LocationName = dc_location.Name,
                     ParentLocationId = dc_location.ParentId,
-                    ParentLocationName = dc_location.ParentName,
+                    ParentLocationName = string.Empty,
                     EmployeeId = dc_location.EmployeeId,
                     CompanyRole = dc_location.CompanyRole
                 };
@@ -202,7 +233,7 @@ namespace OrgChart.Repository
         {
             using (BistrainerContext dc = new BistrainerContext())
             {
-                var dc_location = dc.NewLocations.Find(locationId);
+                var dc_location = dc.NewTempLocations.Find(locationId);
 
                 if (dc_location == null)
                     return null!;
@@ -218,11 +249,12 @@ namespace OrgChart.Repository
                     LocationId = dc_location.Id,
                     LocationName = dc_location.Name,
                     ParentLocationId = dc_location.ParentId,
-                    ParentLocationName = dc_location.ParentName,
+                    ParentLocationName = string.Empty,
                     EmployeeId = dc_location.EmployeeId,
                     CompanyRole = dc_location.CompanyRole
                 };
             }
         }
+
     }
 }

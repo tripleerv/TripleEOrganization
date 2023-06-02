@@ -37,4 +37,6 @@ public partial class User
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
+
+    public DateTime BirthDate { get; set; }
 }

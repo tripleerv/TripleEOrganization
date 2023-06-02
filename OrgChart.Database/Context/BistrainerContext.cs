@@ -18,6 +18,8 @@ public partial class BistrainerContext : DbContext
 
     public virtual DbSet<NewLocation> NewLocations { get; set; }
 
+    public virtual DbSet<NewTempLocation> NewTempLocations { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,6 +28,11 @@ public partial class BistrainerContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<NewTempLocation>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_User_1");

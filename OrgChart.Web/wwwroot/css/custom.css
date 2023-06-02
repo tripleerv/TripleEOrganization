@@ -156,7 +156,7 @@ ul.hide {
 }
 .btn-add:focus, .btn-cancel:focus, .btn-save-add:focus, .btn-save-edit:focus, 
 .btn-edit:focus, .btn-remove:focus, .btn-paste:focus, .btn-move-up:focus, 
-.btn-move-down:focus, .btn-collapse-level:focus  {
+.btn-move-down:focus /*.btn-collapse-level:focus*/  {
     box-shadow: none;
     outline: none;
 }
@@ -165,9 +165,9 @@ ul.hide {
     left: 0rem;
     cursor: default;
 }
-.btn-collapse-level {
+/*.btn-collapse-level {
     font-weight: 900;
-}
+}*/
 .btn-collapse.show:after {
     content: '-';
 }
@@ -183,11 +183,11 @@ ul.hide {
     margin-top: auto;
     margin-bottom: .5rem;
 }
-.btn-move-up, .btn-move-down, .btn-collapse-level {
+.btn-move-up, .btn-move-down /*.btn-collapse-level*/ {
     margin: 0rem;
     padding: 0rem .15rem 0rem .15rem;
 }
-.btn-move-up:hover, .btn-move-down:hover, .btn-collapse-level:hover {
+.btn-move-up:hover, .btn-move-down:hover /*.btn-collapse-level:hover*/ {
     color: #009cde;
 }
 .btn-move-up:disabled, .btn-move-down:disabled {

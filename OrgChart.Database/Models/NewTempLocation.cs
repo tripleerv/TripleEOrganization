@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OrgChart.Database.Models;
 
-[Table("NEW_Location")]
-public partial class NewLocation
+[Table("NEW_TEMP_Location")]
+public partial class NewTempLocation
 {
     [Key]
     public int Id { get; set; }
@@ -16,10 +16,7 @@ public partial class NewLocation
 
     public int ParentId { get; set; }
 
-    [StringLength(50)]
-    public string ParentName { get; set; } = null!;
-
-    [StringLength(50)]
+    [StringLength(20)]
     public string EmployeeId { get; set; } = null!;
 
     public string CompanyRole { get; set; } = null!;

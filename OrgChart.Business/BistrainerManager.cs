@@ -20,10 +20,15 @@ namespace OrgChart.Business
 
         public List<BistrainerLocationModel> Locations { get; }
         public List<BistrainerLocationModel> LocationTree { get; }
+        public List<BistrainerLocationModel> LocationTreeById(int location_id);
         public List<BistrainerLocationModel> LocationTreeById(int location_id, int level);
+        public BistrainerLocationModel LocationTreeById1(int location_id, int level);
         public List<BistrainerLocationModel> LocationFlatTree();
+        public List<BistrainerLocationModel> LocationFlatTree(int location_id);
 
         public List<string> Departments();
+        public int OpenLocationsByLocation(int locationId);
+        public int OpenLocationsByDepartment(string department);
         public List<BistrainerRankedUserModel> TopMatchedEmployees(int location_id, int take);
 
         BistrainerLocationModel Add(string name, int parent_id);
@@ -35,13 +40,19 @@ namespace OrgChart.Business
     }
     public class BistrainerManager : IBistrainerManager
     {
-        private readonly Repository.IBistrainerLocationRepository _bistrainerLocationRepository;
+        public static string GLOBAL_FIRST_LEVEL = string.Empty;
+
+        //private readonly Repository.IBistrainerLocationRepository _bistrainerLocationRepository;
+
+        private readonly Repository.IBistrainerTempLocationRepository _bistrainerLocationRepository;
         private readonly Repository.IBistrainerUserRepository _bistrainerUserRepository;
 
-        public BistrainerManager(Repository.IBistrainerLocationRepository bistrainerLocationRepository, Repository.IBistrainerUserRepository bistrainerUserRepository)
+        //public BistrainerManager(Repository.IBistrainerLocationRepository bistrainerLocationRepository, Repository.IBistrainerUserRepository bistrainerUserRepository, Repository.IBistrainerTempLocationRepository bistrainerTempLocationRepository)
+        public BistrainerManager(Repository.IBistrainerUserRepository bistrainerUserRepository, Repository.IBistrainerTempLocationRepository bistrainerTempLocationRepository)
         {
-            _bistrainerLocationRepository = bistrainerLocationRepository;
+            _bistrainerLocationRepository = bistrainerTempLocationRepository;
             _bistrainerUserRepository = bistrainerUserRepository;
+            //_bistrainerTempLocationRepository = bistrainerTempLocationRepository;
         }
 
         #region Users
@@ -198,6 +209,14 @@ namespace OrgChart.Business
                     CompanyRole = s.CompanyRole
                 }).ToList();
 
+                //foreach (var loc in results)
+                //{
+                //    var new_loc = _bistrainerTempLocationRepository.Add(loc.LocationId, loc.LocationName, loc.ParentLocationId, string.Empty);
+
+                //    if (new_loc != null && loc.User != null)
+                //        _bistrainerTempLocationRepository.UpdateEmployee(new_loc.LocationId, loc.User.EmployeeId);
+                //}
+
                 //foreach(var loc in results)
                 //{
                 //    if (loc.User != null)
@@ -217,13 +236,12 @@ namespace OrgChart.Business
         {
             get
             {
-                List<BistrainerLocationModel> results = new List<BistrainerLocationModel>();
+                //var tete = Locations;
 
+                List<BistrainerLocationModel> results = new List<BistrainerLocationModel>();
+                GLOBAL_FIRST_LEVEL = "1";
                 var all_locations = _bistrainerLocationRepository.Locations;
-                //.Join(Users,
-                //l => l.LocationId,
-                //u => u.LocationId,
-                //(l,u) => new { Location = l, User = u }).ToList();
+
 
                 var node = all_locations.FirstOrDefault(x => x.ParentLocationId == 0)!;
                 int level = 1;
@@ -238,6 +256,7 @@ namespace OrgChart.Business
                     ParentLocationId = node.ParentLocationId,
                     ParentLocationName = node.ParentLocationName,
                     Level = level,
+                    FirstLevelNode = !GLOBAL_FIRST_LEVEL.Contains(level.ToString()),
                     Parent = null!,
                     User = Users.FirstOrDefault(x => x.EmployeeId.Equals(node.EmployeeId))!,
                     Children = GetChildren(all_locations, node.LocationId, level++)
@@ -281,6 +300,16 @@ namespace OrgChart.Business
 
         private List<BistrainerLocationModel> GetChildren(List<Repository.Models.LocationRepositoryModel> all_nodes, int parent_id, int level)
         {
+            if (level == 1)
+            {
+                GLOBAL_FIRST_LEVEL = level.ToString();
+            }
+            else
+            {
+                if (!GLOBAL_FIRST_LEVEL.Contains(level.ToString()))
+                    GLOBAL_FIRST_LEVEL += $",{level}";
+            }
+
             var children = all_nodes.Where(x => x.ParentLocationId == parent_id).ToList();
 
             if (children == null)
@@ -296,6 +325,7 @@ namespace OrgChart.Business
                 ParentLocationId = s.ParentLocationId,
                 ParentLocationName = s.ParentLocationName,
                 Level = level,
+                FirstLevelNode = level < 4 && !GLOBAL_FIRST_LEVEL.Contains(level.ToString()),
                 Parent = null!,
                 Children = null!,
                 User = Users.FirstOrDefault(x => x.EmployeeId.Equals(s.EmployeeId))!,
@@ -310,6 +340,7 @@ namespace OrgChart.Business
                 ParentLocationId = s.ParentLocationId,
                 ParentLocationName = s.ParentLocationName,
                 Level = level,
+                FirstLevelNode = level < 4 && !GLOBAL_FIRST_LEVEL.Contains(level.ToString()),
                 Parent = parent!,
                 Children = GetChildren(all_nodes, s.LocationId, level)!,
                 User = Users.FirstOrDefault(x => x.EmployeeId.Equals(s.EmployeeId))!,
@@ -321,6 +352,25 @@ namespace OrgChart.Business
             List<BistrainerLocationModel> results = new List<BistrainerLocationModel>();
 
             foreach (var node in LocationTree)
+            {
+                results.Add(AddChildren(results, node.Children, node));
+            }
+
+            return results;
+        }
+
+        public List<BistrainerLocationModel> LocationFlatTree(int location_id)
+        {
+            List<BistrainerLocationModel> results = new List<BistrainerLocationModel>();
+
+            var parent_node = LocationTreeById1(location_id,0);
+
+            if (parent_node == null)
+                return null!;
+
+            results.Add(parent_node);
+
+            foreach (var node in parent_node.Children)
             {
                 results.Add(AddChildren(results, node.Children, node));
             }
@@ -494,7 +544,67 @@ namespace OrgChart.Business
 
         public List<string> Departments()
         {
+            var temp = GetOpenLocations(8);
+
             return _bistrainerLocationRepository.Departments;
+        }
+
+        public int OpenLocationsByLocation(int locationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int OpenLocationsByDepartment(string department)
+        {
+            throw new NotImplementedException();
+        }
+
+        private int GetOpenLocations(int locationId)
+        {
+            var location = LocationTreeById1(locationId, 0);
+            if (location == null)
+                return 0;
+
+            int count = location.User == null ? 1 : 0;
+
+            foreach (var child in location.Children)
+            {
+                count += GetOpenLocations(child.LocationId);
+            }
+
+            return count;
+        }
+
+        public List<BistrainerLocationModel> LocationTreeById(int location_id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public BistrainerLocationModel LocationTreeById1(int location_id, int level)
+        {
+           BistrainerLocationModel results = new BistrainerLocationModel();
+
+            var all_locations = _bistrainerLocationRepository.Locations;
+
+            var node = all_locations.FirstOrDefault(x => x.LocationId == location_id)!;
+
+            if (node == null)
+                return null!;
+
+            results = new BistrainerLocationModel
+            {
+                LocationId = node.LocationId,
+                LocationName = node.LocationName,
+                ParentLocationId = node.ParentLocationId,
+                ParentLocationName = node.ParentLocationName,
+                Level = level,
+                Parent = null!,
+                User = Users.FirstOrDefault(x => x.EmployeeId.Equals(node.EmployeeId))!,
+                Children = GetChildren(all_locations, node.LocationId, level++)
+            };
+
+
+            return results;
         }
     }
 }

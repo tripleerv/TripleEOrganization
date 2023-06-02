@@ -103,9 +103,32 @@
     padding-left: 6.5rem;
 }
 /*********************************************************************************/
+    .btn-collapse-location .toggle-caret::before {
+        content: "\f078"; /* Unicode for caret-right icon */
+        font-family: "FontAwesome"; /* Font Awesome icon font */
+        transition: transform 0.3s ease;
+    }
+
+    .btn-collapse-location.collapsed {
+        transform: rotate(-90deg);
+        transition: transform 0.3s ease;
+        border-top-right-radius: .2rem;
+        border-bottom-left-radius: 0;
+    }
 .btn-collapse-location {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+.btn-collapse-level {
+    left: 5rem;
+    white-space: nowrap;
+}
+#btn-toggle-level-two {
+}
+#btn-toggle-level-three {
+    top: 15rem;
 }
 
 .input-location-name {
@@ -217,4 +240,8 @@ span.missing-company-role:hover {
     position: fixed;
     bottom: 4rem;
     left: 1rem;
+}
+.btn-link {
+    margin: 0rem 1rem;
+    padding: 0rem;
 }

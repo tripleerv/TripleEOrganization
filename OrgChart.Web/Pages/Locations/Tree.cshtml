@@ -1,0 +1,16 @@
+﻿@page "{LocationId}"
+@model OrgChart.Web.Pages.Locations.TreeModel
+@{
+
+}
+<link rel="stylesheet" href="~/css/org_chart.css?v=1" />
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
+<script type="text/javascript" src="~/js/locations/tree.js?v=1" defer></script>
+
+<input id="input-location-id" type="hidden" asp-for="LocationId" />
+
+<div id="div-chart-wrapper" class="col-12 col-sm-9">
+    <div id="div-chart" class="">
+    </div>
+</div>

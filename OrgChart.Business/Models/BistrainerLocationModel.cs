@@ -13,6 +13,7 @@ namespace OrgChart.Business.Models
         public int ParentLocationId { get; set; }
         public string ParentLocationName { get; set; } = null!;
         public int Level { get; set; }
+        public bool FirstLevelNode { get; set; }
         public BistrainerUserModel User { get; set; } = null!;
 
         public string CompanyRole { get; set; } = string.Empty;

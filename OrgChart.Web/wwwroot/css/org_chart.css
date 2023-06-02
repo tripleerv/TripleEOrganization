@@ -2,15 +2,14 @@
 
 #div-chart-wrapper {
     padding-top: 1rem;
-    margin-left: auto;    
+    margin: auto;    
     width: 75vw;
     height: 85vh;
 }
 #div-chart {
     overflow: auto;
-    width: 74vw;
+    width: 100%;
     height: 85vh;
-    cursor: grab;
 }
 
 #div-employee-search {

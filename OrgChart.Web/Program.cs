@@ -35,6 +35,7 @@ builder.Services.AddSingleton<OrgChart.Repository.ISubDepartmentRepository, OrgC
 builder.Services.AddSingleton<OrgChart.Repository.IJobRepository, OrgChart.Repository.JobRepository>();
 builder.Services.AddSingleton<OrgChart.Repository.IHierarchyRepository, OrgChart.Repository.HierarchyRepository>();
 builder.Services.AddSingleton<OrgChart.Repository.IBistrainerLocationRepository, OrgChart.Repository.BistrainerLocationRepository>();
+builder.Services.AddSingleton<OrgChart.Repository.IBistrainerTempLocationRepository, OrgChart.Repository.BistrainerTempLocationRepository>();
 builder.Services.AddSingleton<OrgChart.Repository.IBistrainerUserRepository, OrgChart.Repository.BistrainerUserRepository>();
 #endregion
 

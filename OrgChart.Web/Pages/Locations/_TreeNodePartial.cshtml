@@ -4,7 +4,7 @@
     string[] units = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" };
     int l_level = 1;
     int max_level = l_level;
-
+    string? toggle_level = ViewData["ToggleLevel"]?.ToString();
     double p = 0;
 
     if (Model.Children != null && Model.Children.Any())
@@ -20,12 +20,22 @@
     string employee_name = Model.User == null ? string.Empty : $"{Model.User.FirstName} {Model.User.LastName}";
 
 }
-<div id="collapse-@Model.LocationId" class="collapse show @units[Model.Level] collapse-@Model.ParentLocationId">
+
+<div id="collapse-@Model.LocationId" class="collapse show @units[Model.Level] collapse-@Model.ParentLocationId collapse-@units[Model.Level]">
     <div class="d-flex div-hover">
         @if (Model.Children!.Any()) {
+            @if (false)
+            {
+                int level = Model.Level + 1;
+                <button id="btn-level-@level" class="btn btn-success btn-sm btn-collapse-location btn-collapse-level" data-bs-toggle="collapse" data-bs-target=".collapse-@units[level]" tabindex="-1" aria-labelledby="label-level-@level">
+                    <span class="toggle-caret"></span>
+                </button>
+                <label id="label-level-@level" for="btn-level-@level" class="btn-label btn btn-success btn-sm">Level</label>
+            }
+
             <button class="btn btn-primary btn-sm btn-collapse-location" data-bs-toggle="collapse" data-bs-target=".collapse-@Model.LocationId" tabindex="-1">
-                +
-            </button>
+                <span class="toggle-caret"></span>
+            </button>            
         }
         <input id="input-location-@Model.LocationId" class="form-control form-control-sm input-location-name" data-location-id="@Model.LocationId" type="text" value="@Model.LocationName" />
         <input id="input-employee-@Model.LocationId" class="form-control form-control-sm input-employee-name" data-location-id="@Model.LocationId" type="text" value="@employee_name" tabindex="-1" />
@@ -36,6 +46,10 @@
                 <button class="btn btn-sm btn-danger btn-remove-location" data-location-id="@Model.LocationId" tabindex="-1">REMOVE</button>
             }
             <button type="button" class="btn btn-outline-secondary btn-top-matches" data-bs-toggle="modal" data-location-id="@Model.LocationId" data-bs-target="#modal-ranked-user-list" tabindex="-1">Matched Employees</button>
+            @if(Model.Children!.Any())
+            {
+                <a class="btn btn-link" asp-page="/Locations/Tree" asp-route-LocationId="@Model.LocationId">Tree</a>
+            }            
         </div>   
         @if (!string.IsNullOrEmpty(team_health))
         {

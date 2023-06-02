@@ -8,7 +8,7 @@
 }
 
 <link rel="stylesheet" href="~/css/locations.css?v=1"  asp-append-version="true" />
-<script type="text/javascript" src="~/js/locations/index.js?v=1" defer></script>
+<script type="text/javascript" src="~/js/locations/index.js?v=2" defer></script>
 
 <ul id="ul-employees" class="dropdown-menu">
     <li class="li-employees border-top"><div class="dropdown-item text-muted">0 results</div></li>
@@ -18,9 +18,19 @@
     <button id="btn-export-locations" type="submit" class="btn btn-primary">Export Locations</button>
 </form>
 
-<div class="container mt-2">
+<div class="container-fluid mt-2">
+    <h5 class="title py-2 my-2 border-bottom text-center">Temporary Locations</h5>
     <div class="row">
-        <div class="col-12">
+        <div class="col-1">
+            <button id="btn-toggle-level-two" class="btn btn-success btn-sm btn-collapse-level" data-bs-toggle="collapse" data-bs-target=".collapse-four" tabindex="-1">
+                Toggle Level 3
+            </button>
+            <button id="btn-toggle-level-three" class="btn btn-success btn-sm btn-collapse-level" data-bs-toggle="collapse" data-bs-target=".collapse-five" tabindex="-1">
+                Toggle Level 4
+            </button>
+        </div>
+        <div class="col-11">
+
             @foreach (var node in Model.ParentLocation.Locations)
             {
                 @await Html.PartialAsync("~/Pages/Locations/_TreeNodePartial.cshtml", node)
